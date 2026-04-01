@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>WebChats · Connect instantly | Basics & stats</title>
+    <!-- Google Fonts for clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f6f9fc 0%, #eef2f7 100%);
+            color: #1a2c3e;
+            line-height: 1.4;
+            scroll-behavior: smooth;
+        }
+
+        /* container utility */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        /* header / nav */
+        .navbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo i {
+            font-size: 2rem;
+            color: #2c7da0;
+            background: white;
+            padding: 8px;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -8px rgba(0,0,0,0.1);
+        }
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1f5e7e, #3b9bcb);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            font-weight: 500;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #2c5368;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+        .nav-links a:hover {
+            color: #1f8cad;
+        }
+        .badge-header {
+            background: #e9f2f5;
+            padding: 6px 14px;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e6f8f;
+        }
+
+        /* hero section */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            padding: 50px 0 30px;
+        }
+        .hero-text {
+            flex: 1.2;
+        }
+        .hero-text .tag {
+            background: #d9eff8;
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #136b8d;
+            margin-bottom: 20px;
+        }
+        .hero-text h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #0b2b3b;
+        }
+        .hero-text p {
+            font-size: 1.2rem;
+            color: #2c4b5e;
+            margin-bottom: 32px;
+            max-width: 90%;
+        }
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: #226f8f;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-primary:hover {
+            background: #0f5777;
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #2c7da0;
+            color: #1c6f8f;
+            padding: 12px 28px;
+            border-radius: 48px;
+            font-weight: 600;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .btn-outline:hover {
+            background: #e0f0f7;
+            border-color: #145c7a;
+        }
+        .hero-stats {
+            flex: 0.9;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 48px;
+            padding: 28px 20px;
+            box-shadow: 0 25px 40px -18px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        /* Stats grid (live) */
+        .stats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 32px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            border: 1px solid #e2edf2;
+        }
+        .stat-icon {
+            width: 54px;
+            height: 54px;
+            background: #e2f0f5;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #1f7e9e;
+        }
+        .stat-info {
+            flex: 1;
+        }
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #0f4b64;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #5e7e8f;
+            letter-spacing: 0.5px;
+        }
+        .stat-trend {
+            font-size: 0.75rem;
+            color: #3ba372;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        /* WebChats basics section */
+        .basics-section {
+            margin: 70px 0 50px;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #1c3e50;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: #2c9bcb;
+            border-radius: 4px;
+        }
+        .basics-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 48px;
+        }
+        .basic-card {
+            background: white;
+            border-radius: 32px;
+            flex: 1 1 280px;
+            padding: 28px 24px;
+            transition: all 0.25s;
+            border: 1px solid #deecf2;
+            box-shadow: 0 12px 20px -12px rgba(0,0,0,0.05);
+        }
+        .basic-card:hover {
+            transform: translateY(-6px);
+            border-color: #bddce9;
+            box-shadow: 0 24px 30px -14px rgba(0,0,0,0.1);
+        }
+        .basic-icon {
+            font-size: 2.5rem;
+            background: #ebf5fa;
+            width: 65px;
+            height: 65px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            color: #1f7a9c;
+        }
+        .basic-card h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .basic-card p {
+            color: #3d6378;
+            line-height: 1.5;
+        }
+        .mini-list {
+            margin-top: 18px;
+            list-style: none;
+        }
+        .mini-list li {
+            margin: 10px 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .mini-list li i {
+            color: #2b8dad;
+            width: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* extra info: about webchats */
+        .info-block {
+            background: linear-gradient(120deg, #e7f2f7, #ffffff);
+            border-radius: 40px;
+            padding: 40px 36px;
+            margin: 50px 0 50px;
+            border: 1px solid #cde3ec;
+        }
+        .flex-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+        }
+        .info-text {
+            flex: 1.4;
+        }
+        .info-text h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .info-text p {
+            margin-bottom: 20px;
+            color: #1e4a62;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .info-stats-small {
+            flex: 1;
+            background: white;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 12px 20px rgba(0,0,0,0.03);
+        }
+
+        /* simple chat demo mock (just visual) */
+        .demo-chat {
+            background: #ffffffdd;
+            backdrop-filter: blur(2px);
+            border-radius: 38px;
+            padding: 18px;
+            margin-top: 20px;
+            border: 1px solid #bfdbe8;
+        }
+        .msg-row {
+            display: flex;
+            gap: 12px;
+            margin: 15px 0;
+            align-items: flex-start;
+        }
+        .msg-bubble {
+            background: #f1f6f9;
+            padding: 10px 16px;
+            border-radius: 24px;
+            max-width: 80%;
+            font-size: 0.85rem;
+        }
+        .msg-bubble.self {
+            background: #d9edf5;
+            margin-left: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0 30px;
+            border-top: 1px solid #cde0e9;
+            margin-top: 40px;
+            color: #446d82;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 780px) {
+            .hero-text h2 { font-size: 2.2rem; }
+            .stat-number { font-size: 1.8rem; }
+            .container { padding: 0 20px; }
+            .navbar { flex-direction: column; gap: 16px; }
+        }
+
+        button {
+            background: none;
+            border: none;
+        }
+        .click-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1f5e7e;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: 0.2s;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- navigation -->
+    <div class="navbar">
+        <div class="logo">
+            <i class="fas fa-comments"></i>
+            <h1>WebChats<span style="font-weight:400; color:#4387a3;">·hub</span></h1>
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Basics</a>
+            <a href="#">Stats</a>
+            <a href="#">Community</a>
+            <span class="badge-header"><i class="fas fa-globe"></i> live 24/7</span>
+        </div>
+    </div>
+
+    <!-- Hero + dynamic stats -->
+    <div class="hero">
+        <div class="hero-text">
+            <div class="tag"><i class="fas fa-bolt"></i> Real-time conversations</div>
+            <h2>Connect, share & <br> grow with WebChats</h2>
+            <p>Fast, secure, and beautifully simple chat experiences — right in your browser. No downloads, just instant connection.</p>
+            <div class="btn-group">
+                <button class="btn-primary" id="startChatBtn"><i class="fas fa-rocket"></i> Start chatting</button>
+                <button class="btn-outline" id="refreshStatsBtn"><i class="fas fa-chart-line"></i> Refresh stats</button>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stats-grid" id="statsContainer">
+                <!-- dynamic stats will be injected / updated via JS -->
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="activeUsers">2.4M</div>
+                        <div class="stat-label">Active users</div>
+                        <div class="stat-trend"><i class="fas fa-arrow-up"></i> +12% this month</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-comment-dots"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="dailyMsgs">8.2M</div>
+                        <div class="stat-label">Messages / day</div>
+                        <div class="stat-trend"><i class="fas fa-charging-station"></i> peak hours: 6-9PM</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-globe"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="countries">190+</div>
+                        <div class="stat-label">Countries reached</div>
+                        <div class="stat-trend"><i class="fas fa-language"></i> 45 languages supported</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WEBCHATS BASICS (detailed) -->
+    <div class="basics-section">
+        <h2 class="section-title">📡 WebChats · basics explained</h2>
+        <div class="basics-grid">
+            <div class="basic-card">
+                <div class="basic-icon"><i class="fas fa-code"></i></div>
+                <h3>HTML/CSS core</h3>
+                <p>Every WebChat interface uses semantic HTML5 + modern CSS for responsiveness. Lightweight and fast.</p>
+                <ul class="mini-list">
+                    <li><i class="fas fa-check-circle"></i> Flex/Grid layouts</li>
+                    <li><i class="fas fa-check-circle"></i> Custom properties</li>
+                    <li><i class="fas fa-mobile-alt"></i> Mobile-first design</li>
+                </ul>
+            </div>
+            <div class="basic-card">
+                <div class="basic-icon"><i class="fas fa-bolt"></i></div>
+                <h3>Real-time logic</h3>
+                <p>WebSockets or Server-Sent Events power live updates. No page reload — messages appear instantly.</p>
+                <ul class="mini-list">
+                    <li><i class="fas fa-sync-alt"></i> Event-driven</li>
+                    <li><i class="fas fa-lock"></i> End-to-end encryption</li>
+                    <li><i class="fas fa-database"></i> Cloud sync</li>
+                </ul>
+            </div>
+            <div class="basic-card">
+                <div class="basic-icon"><i class="fas fa-chart-simple"></i></div>
+                <h3>Stats & metrics</h3>
+                <p>Live dashboards track active rooms, message volume, and user sentiment — all visualized with JS.</p>
+                <ul class="mini-list">
+                    <li><i class="fas fa-chart-line"></i> Real-time counters</li>
+                    <li><i class="fas fa-chart-pie"></i> Engagement graphs</li>
+                    <li><i class="fas fa-clock"></i> 24h analytics</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- extra content about WebChats: features + fun stats block -->
+    <div class="info-block">
+        <div class="flex-info">
+            <div class="info-text">
+                <h3>✨ Why WebChats are reshaping communication</h3>
+                <p>Web-based chat platforms eliminate app fatigue — just open a link and start messaging. From customer support to global communities, WebChats combine low latency with rich features like reactions, file sharing, and threaded replies.</p>
+                <p><strong>Did you know?</strong> Over 68% of internet users prefer web-based messaging for quick collaborations. Modern APIs make it effortless to embed chat into any website.</p>
+                <button class="btn-outline" id="learnMoreBtn" style="margin-top: 8px;"><i class="fas fa-book-open"></i> Explore ecosystem</button>
+            </div>
+            <div class="info-stats-small">
+                <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
+                    <i class="fas fa-chart-column" style="font-size: 2rem; color:#1f7a9c;"></i>
+                    <span style="font-weight:700;">🔥 key insights</span>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div style="display:flex; justify-content: space-between;"><span>Avg response time</span> <strong>&lt; 0.4s</strong></div>
+                    <div style="height:6px; background:#e2eef4; border-radius:6px; margin:6px 0;"><div style="width:94%; background:#2c9bcb; height:6px; border-radius:6px;"></div></div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div style="display:flex; justify-content: space-between;"><span>Daily active rooms</span> <strong id="dailyRoomsStat">128K</strong></div>
+                    <div style="height:6px; background:#e2eef4; border-radius:6px; margin:6px 0;"><div style="width:76%; background:#3ba372; height:6px; border-radius:6px;"></div></div>
+                </div>
+                <div><i class="fas fa-hourglass-half"></i> User satisfaction: 4.8/5 ★<br><small>Based on 15k reviews</small></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- little chat mock preview (fun visual) -->
+    <div class="demo-chat">
+        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;"><i class="fas fa-circle" style="font-size: 10px; color:#4bc0a5;"></i><span style="font-weight:600;">#webchats-demo</span><span style="font-size:12px; color:#547e94;"> 124 online</span></div>
+        <div class="msg-row"><div class="msg-bubble"><strong>Alex</strong> 👋 hey, just tried the webchat — super fast!</div></div>
+        <div class="msg-row"><div class="msg-bubble self"><strong>You</strong>  yeah! basics: html/css + live stats</div></div>
+        <div class="msg-row"><div class="msg-bubble"><strong>Maria</strong> 🚀 love the stats widget, shows active users instantly</div></div>
+        <div style="font-size: 0.7rem; text-align: right; margin-top: 8px;"><i class="fas fa-sync-alt"></i> realtime demo · end-to-end encrypted</div>
+    </div>
+</div>
+
+<footer>
+    <i class="fas fa-comment-dots"></i> WebChats — instant connections, clean code & real metrics. <br> © 2025 WebChats Hub — HTML/CSS basics + live stats playground
+</footer>
+
+<div id="toastMsg" class="click-toast">✨ Thanks for interacting!</div>
+
+<script>
+    // Dynamic interactive stats: update active users & daily messages randomly within realistic range
+    // Also randomize daily rooms stat in the insight block.
+    // Also "Start chatting" shows a friendly message, "Refresh stats" randomizes numbers.
+
+    const activeUsersSpan = document.getElementById('activeUsers');
+    const dailyMsgsSpan = document.getElementById('dailyMsgs');
+    const dailyRoomsSpan = document.getElementById('dailyRoomsStat');
+
+    // Helper to format numbers with K/M
+    function formatNumber(num) {
+        if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+        if (num >= 1e3) return (num / 1e3).toFixed(0) + 'K';
+        return num.toString();
+    }
+
+    // Generate realistic stats
+    function generateStats() {
+        // active users between 2.1M and 3.2M
+        let activeVal = 2100000 + Math.floor(Math.random() * 1300000);
+        let activeFormatted = formatNumber(activeVal);
+        activeUsersSpan.innerText = activeFormatted;
+
+        // daily messages between 7.2M and 12.5M
+        let msgVal = 7200000 + Math.floor(Math.random() * 5500000);
+        let msgFormatted = formatNumber(msgVal);
+        dailyMsgsSpan.innerText = msgFormatted;
+
+        // daily rooms (for insight) between 105K and 180K
+        let roomsVal = 105000 + Math.floor(Math.random() * 80000);
+        dailyRoomsSpan.innerText = formatNumber(roomsVal) + '';
+        
+        // optional: add small trend variation text (just for fun)
+        let trendUp = document.querySelector('.stat-trend');
+        if (trendUp) {
+            let changePercent = (Math.random() * 18 + 5).toFixed(1);
+            trendUp.innerHTML = `<i class="fas fa-arrow-up"></i> +${changePercent}% weekly growth`;
+        }
+        // update second trend maybe
+        let trendMsg = document.querySelectorAll('.stat-trend')[1];
+        if (trendMsg) {
+            let peakMsg = ['peak hours: 5-9PM', '🔥 weekend spikes +32%', '📈 +2.1M daily since Q1', '🌙 night owls active'];
+            trendMsg.innerHTML = `<i class="fas fa-charging-station"></i> ${peakMsg[Math.floor(Math.random() * peakMsg.length)]}`;
+        }
+    }
+
+    // refresh stats and show toast
+    function refreshAllStats() {
+        generateStats();
+        showToast('📊 Stats updated with live WebChats metrics!');
+    }
+
+    // toast message with fade effect
+    let toastTimeout;
+    function showToast(message) {
+        const toast = document.getElementById('toastMsg');
+        if (!toast) return;
+        toast.innerText = message || '✨ WebChats interactive!';
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toast.style.opacity = '0';
+        }, 2200);
+    }
+
+    // Simulate "Start chatting" action
+    function startChatAction() {
+        showToast('💬 Starting WebChat session — you are now connected to a live demo!');
+        // small bonus: modify demo chat mock with extra message
+        const demoContainer = document.querySelector('.demo-chat');
+        if (demoContainer && !demoContainer.querySelector('.temp-chat-msg')) {
+            let newMsgDiv = document.createElement('div');
+            newMsgDiv.className = 'msg-row temp-chat-msg';
+            newMsgDiv.innerHTML = `<div class="msg-bubble self"><strong>System</strong>  ✨ Welcome! Stats are dynamic — click refresh anytime.</div>`;
+            demoContainer.appendChild(newMsgDiv);
+            setTimeout(() => {
+                newMsgDiv.style.opacity = '0.7';
+            }, 100);
+        } else {
+            showToast('🤝 Already in conversation mode! Stats are live.');
+        }
+    }
+
+    // Additional "Learn more" button
+    function learnMoreAction() {
+        showToast('📚 WebChats basics: HTML/CSS structure, realtime API, and live counters — explore further!');
+        // smooth scroll to basics
+        document.querySelector('.basics-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Event listeners
+    const startBtn = document.getElementById('startChatBtn');
+    const refreshBtn = document.getElementById('refreshStatsBtn');
+    const learnBtn = document.getElementById('learnMoreBtn');
+    
+    if (startBtn) startBtn.addEventListener('click', startChatAction);
+    if (refreshBtn) refreshBtn.addEventListener('click', refreshAllStats);
+    if (learnBtn) learnBtn.addEventListener('click', learnMoreAction);
+    
+    // initial stat generation on page load
+    generateStats();
+
+    // bonus: simulate periodic updates every 45 seconds (optional, but adds liveliness)
+    let intervalId = setInterval(() => {
+        // only update stats silently, but we can also refresh without toast to keep subtle
+        generateStats();
+        let activeValRaw = activeUsersSpan.innerText;
+        // but we don't want to spam toast — just update numbers quietly
+        const toastMsgDiv = document.getElementById('toastMsg');
+        // avoid overriding if toast is active? we just update data but no forced toast
+        // also update daily rooms
+    }, 38000);
+
+    // Cleanup hypothetical (not necessary but good practice for long run)
+    window.addEventListener('beforeunload', () => {
+        if (intervalId) clearInterval(intervalId);
+    });
+</script>
+</body>
+</html>
