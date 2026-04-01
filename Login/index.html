@@ -3,67 +3,671 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Login & Signup System - Backendless</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
-        .dashboard {
+        
+        .container {
             background: white;
-            border-radius: 10px;
-            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 450px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
-        button {
-            background: #667eea;
+        
+        .header h1 {
             color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
+            font-size: 28px;
+            margin-bottom: 5px;
         }
-        button:hover {
-            background: #5a67d8;
+        
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .toggle-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: #f5f5f5;
+            padding: 5px;
+            border-radius: 10px;
+        }
+        
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #666;
+        }
+        
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(102,126,234,0.3);
+        }
+        
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form.hidden {
+            display: none;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .input-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .input-group input {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            outline: none;
+            font-family: inherit;
+        }
+        
+        .input-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        
+        button[type="submit"] {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+        
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .message.error {
+            background: #fee;
+            color: #c33;
+            border-left: 4px solid #c33;
+        }
+        
+        .message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+        
+        .message.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+        
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .test-data {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .test-data h4 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        
+        .test-data p {
+            margin: 5px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-badge.online {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            font-size: 12px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <h1>Welcome to Dashboard!</h1>
-        <p>You have successfully logged in.</p>
-        <button onclick="logout()">Logout</button>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome</h1>
+            <p>Login or create an account</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="test-data">
+                <h4>📝 Test Account Details</h4>
+                <p><strong>Username:</strong> Temps9292</p>
+                <p><strong>Email:</strong> temps9292@atomicmail.io</p>
+                <p><strong>Password:</strong> Temp@12345</p>
+                <p style="margin-top: 5px; color: #667eea;">💡 Click Signup first to create this account!</p>
+            </div>
+            
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" onclick="showForm('login')">🔐 Login</button>
+                <button class="toggle-btn" onclick="showForm('signup')">📝 Sign Up</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="form">
+                <div class="input-group">
+                    <label>📧 Email or Username</label>
+                    <input type="text" id="loginIdentifier" placeholder="Enter email or username">
+                </div>
+                <div class="input-group">
+                    <label>🔒 Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password">
+                </div>
+                <button type="submit" onclick="handleLogin()">Login</button>
+            </div>
+            
+            <!-- Signup Form -->
+            <div id="signupForm" class="form hidden">
+                <div class="input-group">
+                    <label>👤 Username</label>
+                    <input type="text" id="signupUsername" placeholder="Choose a username" value="Temps9292">
+                </div>
+                <div class="input-group">
+                    <label>📧 Email</label>
+                    <input type="email" id="signupEmail" placeholder="Enter email" value="temps9292@atomicmail.io">
+                </div>
+                <div class="input-group">
+                    <label>🔒 Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create password" value="Temp@12345">
+                </div>
+                <button type="submit" onclick="handleSignup()">Create Account</button>
+            </div>
+            
+            <div id="message" class="message"></div>
+        </div>
+        
+        <div class="footer">
+            Powered by Backendless | Secure Authentication
+        </div>
     </div>
 
+    <!-- Backendless SDK -->
     <script src="https://eu-api.backendless.com/sdk/js/latest/backendless.min.js"></script>
+    
     <script>
-        const APP_ID = 'YOUR_APP_ID';
-        const API_KEY = 'YOUR_API_KEY';
+        // ==================== BACKENDLESS CONFIGURATION ====================
+        const APP_ID = '2C6E36A9-9FEF-48F2-B599-E70ADA7EA1B0';
+        const API_KEY = '52902FDF-B21C-4333-AB6E-8527E443AE94';
+        const REST_ID = '566707A8-B592-426C-885C-7B2C6961C998';
+        
+        // Initialize Backendless
         Backendless.initApp(APP_ID, API_KEY);
+        
+        console.log('✅ Backendless initialized');
+        console.log('📱 App ID:', APP_ID);
+        console.log('🔑 API Key:', API_KEY);
+        
+        // ==================== HELPER FUNCTIONS ====================
+        function showMessage(msg, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = msg;
+            messageDiv.className = `message ${type} show`;
+            
+            setTimeout(() => {
+                messageDiv.classList.remove('show');
+            }, 5000);
+        }
+        
+        function showLoading(isLoading) {
+            const buttons = document.querySelectorAll('button[type="submit"]');
+            buttons.forEach(btn => {
+                if (isLoading) {
+                    btn.classList.add('loading');
+                    btn.disabled = true;
+                    btn.textContent = btn.textContent.includes('Login') ? 'Logging in...' : 'Creating account...';
+                } else {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    btn.textContent = btn.textContent.includes('Login') ? 'Login' : 'Create Account';
+                }
+            });
+        }
+        
+        function showForm(formType) {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const toggleBtns = document.querySelectorAll('.toggle-btn');
+            
+            if (formType === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                toggleBtns[0].classList.add('active');
+                toggleBtns[1].classList.remove('active');
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                toggleBtns[0].classList.remove('active');
+                toggleBtns[1].classList.add('active');
+            }
+            
+            document.getElementById('message').className = 'message';
+        }
+        
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+        }
         
         function getCookie(name) {
             const value = `; ${document.cookie}`;
             const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
         }
         
+        // ==================== SIGNUP FUNCTION ====================
+        async function handleSignup() {
+            const username = document.getElementById('signupUsername').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            
+            if (!username || !email || !password) {
+                showMessage('Please fill all fields', 'error');
+                return;
+            }
+            
+            if (!email.includes('@')) {
+                showMessage('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                // Method 1: Using REST API directly (GET method)
+                const signupData = {
+                    username: username,
+                    email: email,
+                    password: password
+                };
+                
+                console.log('📝 Attempting signup with:', signupData);
+                
+                // Using REST API with fetch
+                const response = await fetch(`https://choicecause-us.backendless.app/api/services/Login/signup`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'application-id': APP_ID,
+                        'secret-key': API_KEY,
+                        'rest-id': REST_ID
+                    },
+                    body: JSON.stringify(signupData)
+                });
+                
+                const result = await response.json();
+                console.log('📥 Signup response:', result);
+                
+                if (result.success) {
+                    showMessage('✅ Signup successful! Please login now.', 'success');
+                    // Clear signup form
+                    document.getElementById('signupUsername').value = '';
+                    document.getElementById('signupEmail').value = '';
+                    document.getElementById('signupPassword').value = '';
+                    // Switch to login form after 2 seconds
+                    setTimeout(() => {
+                        showForm('login');
+                        // Auto-fill login with email
+                        document.getElementById('loginIdentifier').value = email;
+                    }, 2000);
+                } else {
+                    showMessage(`❌ Signup failed: ${result.message}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('❌ Signup error:', error);
+                showMessage(`Signup failed: ${error.message}`, 'error');
+            }
+            
+            showLoading(false);
+        }
+        
+        // ==================== LOGIN FUNCTION ====================
+        async function handleLogin() {
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!identifier || !password) {
+                showMessage('Please enter email/username and password', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const loginData = {
+                    identifier: identifier,
+                    password: password
+                };
+                
+                console.log('🔐 Attempting login with:', loginData);
+                
+                // Using REST API with fetch
+                const response = await fetch(`https://choicecause-us.backendless.app/api/services/Login/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'application-id': APP_ID,
+                        'secret-key': API_KEY,
+                        'rest-id': REST_ID
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const result = await response.json();
+                console.log('📥 Login response:', result);
+                
+                if (result.success) {
+                    // Store cookie token
+                    if (result.data && result.data.cookieToken) {
+                        setCookie('auth_token', result.data.cookieToken, 30);
+                        setCookie('user_id', result.data.userId, 30);
+                        setCookie('username', result.data.username, 30);
+                        
+                        showMessage(`✅ Welcome ${result.data.username || identifier}! Login successful. Redirecting...`, 'success');
+                        
+                        // Store user info in localStorage for demo
+                        localStorage.setItem('user', JSON.stringify(result.data));
+                        
+                        // Redirect after 2 seconds
+                        setTimeout(() => {
+                            // You can redirect to dashboard or show success page
+                            showMessage(`🎉 Logged in as ${result.data.username || identifier}`, 'success');
+                            // Uncomment to redirect:
+                            // window.location.href = 'dashboard.html';
+                            
+                            // For demo, show user info
+                            displayUserInfo(result.data);
+                        }, 2000);
+                    } else {
+                        showMessage('Login successful but no token received', 'info');
+                    }
+                } else {
+                    showMessage(`❌ Login failed: ${result.message}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('❌ Login error:', error);
+                showMessage(`Login failed: ${error.message}`, 'error');
+            }
+            
+            showLoading(false);
+        }
+        
+        // ==================== DISPLAY USER INFO ====================
+        function displayUserInfo(userData) {
+            const container = document.querySelector('.form-container');
+            const existingInfo = document.querySelector('.user-info');
+            if (existingInfo) existingInfo.remove();
+            
+            const userInfo = document.createElement('div');
+            userInfo.className = 'test-data user-info';
+            userInfo.style.background = '#e8f5e9';
+            userInfo.style.borderColor = '#2e7d32';
+            userInfo.innerHTML = `
+                <h4 style="color: #2e7d32;">✅ Logged In Successfully!</h4>
+                <p><strong>👤 Username:</strong> ${userData.username}</p>
+                <p><strong>📧 Email:</strong> ${userData.email}</p>
+                <p><strong>🆔 User ID:</strong> ${userData.userId}</p>
+                <p><strong>🔑 Token:</strong> ${userData.cookieToken.substring(0, 30)}...</p>
+                <button onclick="logout()" style="margin-top: 10px; background: #667eea; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer;">Logout</button>
+            `;
+            
+            container.insertBefore(userInfo, container.firstChild);
+        }
+        
+        // ==================== LOGOUT FUNCTION ====================
         async function logout() {
+            const token = getCookie('auth_token');
+            
+            if (token) {
+                try {
+                    await fetch(`https://choicecause-us.backendless.app/api/services/Login/logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'application-id': APP_ID,
+                            'secret-key': API_KEY,
+                            'rest-id': REST_ID
+                        },
+                        body: JSON.stringify({ cookieToken: token })
+                    });
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            }
+            
             // Clear cookies
             document.cookie = 'auth_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
             document.cookie = 'user_id=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+            document.cookie = 'username=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+            localStorage.removeItem('user');
             
-            // Logout from Backendless
-            await Backendless.UserService.logout();
+            // Remove user info display
+            const userInfo = document.querySelector('.user-info');
+            if (userInfo) userInfo.remove();
             
-            // Redirect to login page
-            window.location.href = 'index.html';
+            showMessage('Logged out successfully', 'success');
+            
+            // Clear forms
+            document.getElementById('loginIdentifier').value = '';
+            document.getElementById('loginPassword').value = '';
         }
+        
+        // ==================== CHECK EXISTING SESSION ====================
+        async function checkExistingSession() {
+            const token = getCookie('auth_token');
+            const userId = getCookie('user_id');
+            
+            if (token && userId) {
+                try {
+                    const response = await fetch(`https://choicecause-us.backendless.app/api/services/Login/verifyToken`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'application-id': APP_ID,
+                            'secret-key': API_KEY,
+                            'rest-id': REST_ID
+                        },
+                        body: JSON.stringify({ cookieToken: token })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success && result.data) {
+                        console.log('✅ Existing session valid for:', result.data.username);
+                        displayUserInfo(result.data);
+                        showMessage(`Welcome back, ${result.data.username}!`, 'success');
+                    } else {
+                        console.log('❌ Session expired');
+                        logout();
+                    }
+                } catch (error) {
+                    console.error('Session check error:', error);
+                }
+            }
+        }
+        
+        // ==================== TEST YOUR SERVER CODE ====================
+        async function testServerCode() {
+            console.log('🧪 Testing server code connection...');
+            
+            try {
+                // Test if server code is accessible
+                const testResponse = await fetch(`https://choicecause-us.backendless.app/api/services/Login/checkUserExists`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'application-id': APP_ID,
+                        'secret-key': API_KEY,
+                        'rest-id': REST_ID
+                    },
+                    body: JSON.stringify({ 
+                        username: 'Temps9292',
+                        email: 'temps9292@atomicmail.io'
+                    })
+                });
+                
+                const result = await testResponse.json();
+                console.log('📡 Server code test result:', result);
+                
+                if (result.success) {
+                    console.log('✅ Server code is working!');
+                }
+            } catch (error) {
+                console.warn('⚠️ Server code test failed:', error.message);
+            }
+        }
+        
+        // ==================== INITIALIZE ====================
+        // Check existing session on page load
+        checkExistingSession();
+        
+        // Test server code connection
+        setTimeout(() => {
+            testServerCode();
+        }, 1000);
+        
+        // Add enter key support
+        document.getElementById('loginIdentifier').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+        
+        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+        
+        document.getElementById('signupUsername').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleSignup();
+        });
+        
+        document.getElementById('signupEmail').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleSignup();
+        });
+        
+        document.getElementById('signupPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleSignup();
+        });
+        
+        console.log('🚀 Application ready!');
+        console.log('📝 To test:');
+        console.log('1. Click Signup tab');
+        console.log('2. Data is pre-filled with Temps9292 account');
+        console.log('3. Click "Create Account"');
+        console.log('4. Then login with email/username and password');
     </script>
 </body>
 </html>
